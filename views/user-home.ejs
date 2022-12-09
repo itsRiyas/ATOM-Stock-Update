@@ -1,0 +1,437 @@
+<head>
+  <%-include ('partials/header') %>
+</head>
+<header>
+  <%-include ('partials/nav') %>
+</header>
+
+<style>
+    #items li:hover{
+    background-color: rgb(64, 133, 231);
+    color: white;
+}
+  .loading-spinner{
+    position:fixed;
+    top:50%;
+    left:50%;
+    
+    
+  }
+  .loading-spinner-parent{
+    position: absolute;
+    width:100%;
+    height:100%;
+    background-color:rgba(239, 229, 229, 0.7);
+    
+    z-index: 1000;
+  }
+
+
+  body{
+    background-color: #ffffff;
+  }
+</style>
+<!--spiner-->
+<div class="loading-spinner-parent d-none" id="spinner">
+  <div class="spinner-grow loading-spinner text-primary" style="width: 5rem; height:5rem;" role="status">
+  </div>
+</div>
+
+<!--err message modal-->
+<div class="modal" tabindex="-1" id="err-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button type="button" class="btn btn-primary" style="position:fixed;bottom:5;right:5" onclick="saveOrder()">Save</button>
+<div class=" container mt-5">
+    <div class="row">
+        <div class="col-sm-12">
+            <!--
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Add
+            </button>
+            -->
+            <div class="input-group mb-3">
+                
+                <input type="text" id="search" class="form-control"  onkeyup ="filterList()"  placeholder="search here" aria-label="Example text with button addon" aria-describedby="button-addon1">
+              </div>
+
+              <ul class="list-group" id="items">
+               
+                
+                    <li class="list-group-item" onclick="addToTable(this)">nnn</li>
+               
+              </ul>    
+        </div>
+
+
+        <table class="table shadow-lg " id="table-list">
+            <thead>
+              <tr class="">
+                <th scope="col" class="p-4">#</th>
+                <th scope="col" class="p-4">Name</th>
+                <th scope="col" class="p-4">Count</th>
+                <th scope="col" class="p-4">rate</th>
+                <th scope="col" class="p-4">total</th>
+                <th scope="col" class="p-4"><button class="btn btn-danger "onclick="clearAllTableData()">clear all</button></th>      
+              </tr>
+            </thead>
+
+            <tbody id="table-body">
+              <tr id="grand-total-row">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td id="grand-total" class="display-4 text-secondary" >
+
+                </td>
+              </tr>
+              
+              
+              
+            
+            </tbody>
+          </table>
+          <div>
+            
+        </div>
+    </div>
+</div>
+
+
+
+  <script>
+    window.count = 0
+    window.spinner = document.getElementById('spinner')
+    window.tableBody = document.getElementById('table-body')
+    window.table = document.getElementById('table-list')
+    window.errorModal = document.getElementById('err-modal')
+
+    validateTableData = ()=>{
+      //here defining function inside a function
+      getAllRates = () =>{
+       // console.log(table.tBodies)
+       // console.log(document.querySelectorAll('[rate="1"]'))
+       return Array.from(document.querySelectorAll('[rate="1"]')).map(rate => rate.childNodes[0].data)//fetching exact value from a  table row rate
+       
+      }
+      getAllSubTotal = () =>{
+       return Array.from(document.querySelectorAll('[sub-total="1"]')).map(subTotal => subTotal.innerText)
+      }
+
+
+      checkCount = (values)=>{
+        console.log('checking count')
+        console.log(values)
+        let regxNum = /^([1-9][0-9]{0,2}|1000)$/ //working not good negetive values works
+         let isCountOk =  values.every( (count) => regxNum.test(count))//every will return only true or false
+                            
+          console.log('rate' + isCountOk)
+
+        return isCountOk
+
+      }
+
+      checkRate = (rates)=>{
+        console.log('checking rate')
+        console.log(rates)
+        let regxNum = /^([1-9][0-9]{0,2})$/ //just copy pase IMPORTANT 9.5 return false 
+        let isRateOk = rates.every((rate) => regxNum.test(rate))
+        console.log(isRateOk)
+        return isRateOk
+        
+      }
+
+      checkTotal = (subTotals)=>{
+        console.log('checking sub totals')
+        let regex = /[1-9][0-9]{0,4}/
+         return subTotals.every((subTotal) => regex.test(subTotal))//checking subtotal nan or empty
+      }
+
+      checkGrandTotal = (grandTotal) => {
+        console.log('chcecking grand total')
+        return /[1-9][0-9]{0,4}/.test(grandTotal)
+      }
+
+      checkTableRows = () =>{
+        console.log('checking tables rows count')
+        if(tableBody.rows.length <= 1)
+          return false
+        else
+          return true
+        }
+      let tableData = document.getElementById('table-body')
+     
+      let checkedData = []
+     checkedData[0] = checkCount(Array.from(tableData.getElementsByTagName('input'),(ele)=> ele.value ))//passing only input values//
+      checkedData[1] = checkRate(getAllRates())
+      checkedData[2] = checkTotal(getAllSubTotal())
+     checkedData[3] = checkGrandTotal(document.querySelector('#grand-total').innerText)
+      checkedData[4] = checkTableRows()
+      console.log(checkedData) 
+      console.log('before returning')
+
+      if (checkedData.every(Boolean)){
+        return true
+      }
+      else{
+        
+        $('#err-modal').modal('show')
+        return false
+      }
+     
+    }
+     getProducts = ()=>{
+        console.log('calling get')
+        fetch('get-products-for-listing').then((res)=>{
+         res.json().then((res)=>{
+          console.log(res)
+          window.list_items = res[0].items
+         })
+        })
+       }
+   getProducts()///calling get products
+    var filtered = []
+    let no = 0
+    
+    
+    function setListItems(){
+      
+      let items = document.getElementById('items')
+      items.innerHTML = ''
+   
+    for(let i =0;i<filtered.length;i++){
+        let li = document.createElement('li')
+            li.setAttribute('rate',filtered[i].rate)
+            li.innerHTML = filtered[i].name
+            //console.log(li)  
+         li.classList.add('list-group-item')
+         li.addEventListener('click',()=>{
+          addToTable(li)
+         })
+            
+            
+         
+         items.appendChild(li)
+      }
+//      console.log(list_items[i])
+    }
+
+    $(document).ready(function(){
+     $('#search').click(function(){
+        $("#items").show()
+        
+     })
+ 
+
+
+    
+
+    });
+
+    function addToTable(clicked){
+
+        window.count++
+
+        console.log(clicked)
+       // console.log('worked')
+        $("#items").hide()
+       // console.log(clicked.innerHTML)
+        let tr = document.createElement('tr')
+        
+        let td_no = document.createElement('td')
+        let td_product = document.createElement('td')
+        let td_count = document.createElement('td')
+        let td_del_parent = document.createElement('td')
+
+        let td_del = document.createElement('button')
+        
+        td_del_parent.appendChild(td_del)
+        let text_count = document.createElement('input')
+        let td_rate = document.createElement('td')
+        td_rate.setAttribute('rate',1)//just setting rate atttriute to fetch through query seelector all @ validation
+
+        let btn_up = document.createElement('button')
+        btn_up.classList.add('btn','btn-outline-secondary', 'm-1','btn-sm')
+        btn_up.innerText = '+'
+        btn_up.addEventListener('click',()=>{
+          td_rate.firstChild.data = +td_rate.firstChild.data + 1 //+ sign is for converting to intiger lern about it later
+          
+          //console.log(td_rate.firstChild.data) 
+          td_total.innerText = parseInt(text_count.value) * parseInt(td_rate.innerText) //have to fineach total before finding grand total
+          findGrandTotal()
+        })
+        let btn_down = document.createElement('button')
+        btn_down.classList.add('btn','btn-outline-secondary', 'm-1','btn-sm')
+        btn_down.innerText = '-'
+        
+        
+        btn_down.addEventListener('click',()=>{
+          //console.log(td_rate)
+          td_rate.firstChild.data = +td_rate.firstChild.data - 1   
+          td_total.innerText = parseInt(text_count.value) * parseInt(td_rate.innerText) //have to fineach total before finding grand total
+
+          findGrandTotal()
+          
+        })
+        let td_total = document.createElement('td')
+        td_total.setAttribute('sub-total',1)
+        td_total.classList.add('total-each','text-success','h4')
+
+        text_count.type = 'number'
+        text_count.classList.add('form-control','w-25')
+
+        
+        td_del.classList.add('btn','btn-outline-danger')
+        td_del.innerText = 'delete'
+        td_del.addEventListener('click',(event)=>{
+          console.log(event.path)//get the path of that event in dom as an array
+          event.path[2].remove()//first elemet is 'tr'
+          findGrandTotal()
+        })
+
+       
+        td_no.innerText = window.count
+        td_product.innerHTML = clicked.innerHTML
+        
+        td_rate.innerText = clicked.getAttribute('rate')
+        text_count.addEventListener('keyup',()=>{
+        
+          td_total.innerText = parseInt(text_count.value) * parseInt(td_rate.innerText)
+          findGrandTotal()
+        })
+
+        //findGrandTotal()
+        td_count.appendChild(text_count)
+        td_rate.append(btn_up,btn_down)
+
+
+        tr.append(td_no,td_product,td_count,td_rate,td_total,td_del_parent)
+       // console.log(tr)
+        let gTotalRaw = document.getElementById('grand-total-row')
+        gTotalRaw.parentElement.insertBefore(tr,gTotalRaw)//ur use just before() ES6 not supperted on IE
+       // $('#table-list').append(tr)
+    }
+
+    clearAllTableData = () =>{
+
+     tableBody.remove()
+      
+    }
+
+    function filterList(){
+      let val = document.getElementById('search').value
+      //console.log(val)
+      filtered  = window.list_items.filter(function(itm){//map is also work
+        return itm.name.startsWith(val)
+      } )
+      //console.log(filtered)
+
+      setListItems()
+    }
+
+    saveOrder = () =>{
+      console.log('calling save order')
+      console.log(validateTableData())
+      if(validateTableData()){
+        console.log('calling saving order')
+     let data = arrangeOrderData()
+     console.log(data)
+     let req_options = {
+         method: 'POST',
+         
+         headers: {
+            'Content-Type': 'application/json'
+         }
+         
+        }
+       req_options.body = JSON.stringify(data)
+        spinner.classList.remove('d-none')
+      fetch('/user-home-save-order',req_options).then((res)=>res.json()).then(()=>{
+        console.log("saved")
+        setTimeout(()=>{
+          spinner.classList.add('d-none')
+        },2000)
+        clearAllTableData()
+
+      })
+    }
+
+  }
+
+    arrangeOrderData = () =>{
+      console.log('arranging order data')
+      let total_count = 0
+      order_data = []
+
+      let table_rows = document.getElementById('table-list').rows
+      //console.log(table_rows)
+      //converting html to array of rows
+      console.log(table_rows)
+     for(let i=1;i<table_rows.length-1;i++){
+      let product_name = document.querySelector(`#table-list tbody tr:nth-child(${i}) td:nth-child(2)`).innerHTML
+        console.log(product_name)
+
+
+        console.log(document.querySelector(`#table-list tbody tr:nth-child(${i}) td:nth-child(3) input`))
+      let product_count = document.querySelector(`#table-list tbody tr:nth-child(${i}) td:nth-child(3) input`).value
+        console.log(product_count)
+        let product_rate = document.querySelector(`#table-list tbody tr:nth-child(${i}) td:nth-child(4)`).firstChild.data  
+        
+        let total_rate = document.querySelector(`#table-list tbody tr:nth-child(${i}) td:nth-child(5)`).innerHTML
+        let each_item = {}
+
+        each_item.name = product_name
+        each_item.count =product_count
+        each_item.rate = product_rate
+        each_item.total = total_rate
+        
+        console.log(each_item)
+        order_data.push(each_item)
+      }
+      let full_data  = {};
+      full_data.staff = "sujith"
+      full_data.date = new Date()
+      full_data.shop = "anapuzha"
+      full_data.grand_total = findGrandTotal()
+      
+      full_data.items = order_data
+      return full_data
+      /*
+       Array.from(table_rows).forEach((ele,index)=>{
+          console.log(ele.innerHTML)
+       })
+       */
+
+       
+    }
+
+   
+    findGrandTotal = ()=>{
+     console.log('finding total')
+      let grand_total = 0
+      let total_column = document.querySelectorAll('.total-each')
+      total_column.forEach((each_item)=>{
+        grand_total = grand_total + parseInt(each_item.innerText)
+      })
+      document.getElementById('grand-total').innerText = grand_total
+      return grand_total
+    }
+
+
+</script>
