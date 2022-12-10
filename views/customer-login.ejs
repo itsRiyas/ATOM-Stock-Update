@@ -8,15 +8,18 @@
             <form id="user-form" method="post" action="user-home">
                 <div class="mb-3">
                   <label for="user-name" class="form-label">User name</label>
-                  <input type="text" class="form-control" id="user-name" >
-                  
+                  <input type="text" class="form-control" id="user-name" onkeyup="clearErrorInfo()" >
+                  <p id="info-user-blank" class="text-danger d-none">Enter user name</p>
+                  <p id="info-user-length" class="text-danger d-none">minimum 5 and maximum 5 letters</p>
                 </div>
                 <div class="mb-3">
                   <label for="password" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="password">
+                  <input type="password" class="form-control" id="password" onkeyup="clearErrorInfo()">
+                  <p id="info-pass-blank" class="text-danger d-none">Enter password</p>
+                  <p id="info-pass-length" class="text-danger d-none">minimum 5 and maximum 15 letters</p>
                 </div>
                 
-                <button type="submit" class="btn btn-secondary" onclick="loginUser()">Login</button>
+                <button type="button" class="btn btn-secondary" onclick="loginUser()">Login</button>
               </form>   
         </div>
     </div>
@@ -25,13 +28,65 @@
     
 
 <script>
-loginUser = ()=>{
- if( doValidation()){
+  var validationErrors = {
+    username:{
+              length:null,//should between 5 and 15 ,alphanumeric
+              empty:null
+            },
+    password:{
+              length:null,//should between 5 and 15 ,alphanumeric
+              empty:null
+            }
+  }
+  var validationInfo ={
+      username:{
+                  length:document.getElementById('info-user-length'),
+                  empty:document.getElementById('info-user-blank')
+               },
+      password:{
+                  length:document.getElementById('info-pass-length'),
+                  empty:document.getElementById('info-pass-blank')
+              }
+    
+  }
 
-  $('#user-form').submit()
+  informError = ()=>{
+    validationErrors.username.empty ? validationInfo.username.empty.classList.remove('d-none'):null//exicuting null becuse ternary operator need 3 operands
+    validationErrors.username.length ? validationInfo.username.length.classList.remove('d-none'):null
+    validationErrors.password.empty ? validationInfo.password.empty.classList.remove('d-none'):null
+    validationErrors.password.length ? validationInfo.password.length.classList.remove('d-none'):null
+  }
+  clearErrorInfo = ()=>{
+    validationInfo.username.empty.classList.add('d-none')
+    validationInfo.username.length.classList.add('d-none')
+    validationInfo.password.empty.classList.add('d-none')
+    validationInfo.password.length.classList.add('d-none')
+  }
+  setupVariables = ()=>{
+    console.log('working')
+    window.username = document.getElementById('user-name').value
+    window.password = document.getElementById('password').value
+  }
+  checkValidity = ()=>{
+    console.log('checking validity')
+    validationErrors.username.empty =  username == '' ? true : false
+    validationErrors.username.length =  username.length < 5 || username.length > 15 ? true : false
+    validationErrors.password.empty =  password == '' ? true : false
+    validationErrors.password.length =  password.length < 5 || password.length > 15 ? true : false
+    
+    informError()
+    
+    console.log(Object.values(validationErrors))
+   return   Object.values(validationErrors).some(key=>  key.length || key.empty)
+    
+   
+  }
+loginUser = ()=>{
+ setupVariables()
+ 
+ if(!checkValidity()){
+  document.getElementById('user-form').submit()
  }
 }
-doValidation = ()=>{
-  return true
-}
+
   </script>
