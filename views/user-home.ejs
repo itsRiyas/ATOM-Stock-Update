@@ -7,7 +7,7 @@
 
 <style>
     #items li:hover{
-    background-color: rgb(64, 133, 231);
+    background-color: rgb(112, 112, 112);
     color: white;
 }
   .loading-spinner{
@@ -31,32 +31,35 @@
     background-color: #ffffff;
   }
 </style>
-<!--spiner-->
-<div class="loading-spinner-parent d-none" id="spinner">
-  <div class="spinner-grow loading-spinner text-primary" style="width: 5rem; height:5rem;" role="status">
-  </div>
-</div>
-
 <!--err message modal-->
-<div class="modal" tabindex="-1" id="err-modal">
+<div class="modal fade" tabindex="-1" id="err-modal">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
+        <h5 class="modal-title">Check ur credentials</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Modal body text goes here.</p>
+        <p> please fill all the fields properly</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        
+        <button type="button" class="btn btn-dark"data-bs-dismiss="modal">Let me check again</button>
       </div>
     </div>
   </div>
 </div>
 
-<button type="button" class="btn btn-primary" style="position:fixed;bottom:5;right:5" onclick="saveOrder()">Save</button>
+
+<!--spiner-->
+<div class="loading-spinner-parent d-none" id="spinner">
+  <div class="spinner-grow loading-spinner text-dark" style="width: 5rem; height:5rem;" role="status">
+  </div>
+</div>
+
+
+
+<button type="button" class="btn btn-dark" style="position:fixed;bottom:5;right:5" onclick="saveOrder()">Save</button>
 <div class=" container mt-5">
     <div class="row">
         <div class="col-sm-12">
@@ -97,7 +100,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td id="grand-total" class="display-4 text-secondary" >
+                <td id="grand-total" class="display-4 text-secondary" >0
 
                 </td>
               </tr>
@@ -290,6 +293,7 @@
           
         })
         let td_total = document.createElement('td')
+        
         td_total.setAttribute('sub-total',1)
         td_total.classList.add('total-each','text-success','h4')
 
@@ -330,8 +334,31 @@
 
     clearAllTableData = () =>{
 
-     tableBody.remove()
-      
+     /*
+      console.log("start")
+      let length  = table.rows.length
+      console.log(length)
+      console.log(table.rows)
+      for(let i =1;i<length;i++){
+        console.log(`value of i is ${i}`)
+        table.rows[i].remove()
+       
+      }
+      console.log("end")
+      *///check later and set on next time not working code
+
+      tableBody.replaceChildren()
+      let tr_grand = document.createElement('tr')
+      let td_blank = document.createElement('td')
+      let td_grand = document.createElement('td')
+      td_grand.classList.add('display-4' ,'text-secondary')
+      td_grand.id = 'grand-total'
+      td_grand.innerText = 0
+      console.log(td_grand)
+      tr_grand.id = 'grand-total-row'
+      tr_grand.append(td_blank,td_blank,td_blank,td_blank,td_grand)
+      console.log(tableBody)
+      tableBody.appendChild(tr_grand)
     }
 
     function filterList(){
