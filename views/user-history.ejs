@@ -1,0 +1,97 @@
+<head>
+  <%-include ('partials/header') %>
+</head>
+<header>
+  <%-include ('partials/nav') %>
+</header>
+<div >
+  <table class="table mt-5">
+    <thead class="table-dark">
+      <tr>
+        <td>Date</td>
+        <td>Grand total</td>
+        
+      </tr>
+    </thead>
+    <tbody id="tbody-all">
+      
+    </tbody>
+  </table>
+</div>
+<div>
+  <table class="table mt-5">
+    <thead class="table-dark">
+      <tr>
+        
+        <td>item</td>
+        <td>count</td>
+        <td>rate</td>
+        <td>total</td>
+      </tr>
+    </thead>
+    <tbody id="tbody-order">
+      
+    </tbody>
+  </table>
+</div>
+<div>
+  
+</div>
+<script>
+    //var getMoment = '<%= moment() %>'
+    //console.log(getMoment)
+  //feching order data from order table
+    fetch('get-order-data').then((res) =>{
+      res.json().then((result) =>{
+        console.log('inside json conversion')
+        window.orders = result
+        console.log(orders)
+        displayOrders(result.map(orders => ({ date:orders.date, grandTotal :orders.grand_total, id:orders._id}) )) //why yellow bracker here because statement with multy line
+      })
+     })
+displayOrders = (orders) =>{
+   window.tbodyAll = document.getElementById('tbody-all')
+   window.tbodyOrder = document.getElementById('tbody-order')
+    console.log(orders)
+   orders.forEach(displayToTableAll);
+}
+
+displayToTableAll = (order)=>{
+  
+
+  let tr = document.createElement('tr')
+  let td_date = document.createElement('td')
+  let td_grand_total = document.createElement('td')
+  tr.id = order.id
+
+  td_date.innerText = order.date
+  td_grand_total.innerText = order.grandTotal
+  tr.append(td_date,td_grand_total)
+  tbodyAll.appendChild(tr)//now tbody is just a id , i am not using the function document.getElemtById why?
+
+  tr.addEventListener('click',()=>{
+    tbodyOrder.replaceChildren()
+    displayToTableOrder(tr.id)
+    
+  })
+  } 
+
+displayToTableOrder = (id)=>{
+  let items = orders.find((item)=> item._id == id ).items
+  console.log(items)
+  items.forEach((item)=>{
+    let tr = document.createElement('tr')
+    let td_item = document.createElement('td')
+    let td_count = document.createElement('td')
+    let td_rate = document.createElement('td')
+    let td_total = document.createElement('td')
+    td_item.innerText = item.name
+    td_count.innerText = item.count
+    td_rate.innerText = item.rate
+    td_total.innerText = item.total
+    tr.append(td_item,td_count,td_rate,td_total)
+    tbodyOrder.appendChild(tr)
+  })
+
+}
+</script>

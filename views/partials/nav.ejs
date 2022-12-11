@@ -1,19 +1,30 @@
 <div class="collapse" id="navbarToggleExternalContent">
   <div class="bg-dark p-4">
     <h5 class="text-white h4">Sujith k.v</h5>
-  
+  <form action="user-history" id="historySubmit">
     <ul class="list-group ">
-      <li class="list-group-item bg-dark text-white" >History</li>
+      <li class="list-group-item bg-dark text-white" onclick="historySubmit.submit()">History</li>
      
       <li class="list-group-item bg-dark text-white">More (in next update)</li>
     </ul>
+  </form> 
   </div>
 </div>
 <nav class="navbar navbar-dark bg-dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">A T O M</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
   </div>
 </nav>
+<script>
+  getHistory = () =>{
+    console.log('working')
+    fetch('/get-history').then((res)=>{
+      res.json().then((res)=>{
+        console.log()
+      })
+    })
+  }
+</script>

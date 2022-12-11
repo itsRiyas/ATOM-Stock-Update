@@ -119,6 +119,8 @@
 
 
   <script>
+    window.moment = '<%= moment()%>'
+    console.log(moment)
     window.count = 0
     window.spinner = document.getElementById('spinner')
     window.tableBody = document.getElementById('table-body')
@@ -433,7 +435,7 @@
       }
       let full_data  = {};
       full_data.staff = "sujith"
-      full_data.date = new Date()
+      full_data.date = '<%= moment().format('DD/MM/YY') %>'
       full_data.shop = "anapuzha"
       full_data.grand_total = findGrandTotal()
       

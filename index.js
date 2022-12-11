@@ -1,12 +1,13 @@
 const express  =  require('express')
 const router  = require('./router')
+const moment     = require('moment')
 const app  = new express()
 //let cors = require('cors')
 //app.use(cors)
 const mongoose = new require('mongoose')
 app.set(express.static(__dirname + '/node_modules/bootstrap/dist'))
 app.set('view engine', 'ejs')
-
+app.locals.moment = moment
 
 
 
@@ -25,5 +26,7 @@ app.use(express.json());
 app.use('/',router)
 app.listen(1000,'0.0.0.0',(req)=>{
     console.log('server RUNNING @ 1000')
-	console.log()
+	
 })
+
+//console.log(moment)

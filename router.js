@@ -1,5 +1,6 @@
 const express = require('express')
 //const { Model } = require('mongoose')
+const moment = require('moment')
 
 const mongoose = require('mongoose');
 //mongoose.pluralize(null);
@@ -32,7 +33,25 @@ router.get('/get-products-for-listing', (req,res)=>{
 router.post('/user-home',(req,res)=>{
    
     
-    res.render('user-home')
+    res.render('user-home',{ moment:moment})
+})
+
+router.get('/user-history',(req,res)=>{
+   
+   console.log(moment)
+    res.render('user-history',{ moment:moment})
+})
+
+
+router.get('/get-order-data',(req,res)=>{
+   orderModel.find({},(err, result)=>{
+        if(!err){
+            console.log(result)
+            res.json(result)
+        }
+   })
+    console.log('getting order data')
+    //res.rson('user-history')
 })
 
 router.post('/user-home-save-order',(req,res)=>{
