@@ -5,7 +5,7 @@
   <%-include ('partials/nav') %>
 </header>
 <div >
-  <table class="table mt-5">
+  <table class="table mt-5" id="table-all">
     <thead class="table-dark">
       <tr>
         <td>Date</td>
@@ -17,12 +17,14 @@
       
     </tbody>
   </table>
-</div>
+</div> 
 <div>
-  <table class="table mt-5">
-    <thead class="table-dark">
+  <table class="table table-striped mt-5" id="table-order" style="display: none;">
+    
+    <thead class="bg-muted">
+      
       <tr>
-        
+        <tr><td><button type="button" class="btn btn-primary" onclick="showTableOrder()"><</button></td></tr>
         <td>item</td>
         <td>count</td>
         <td>rate</td>
@@ -40,6 +42,12 @@
 <script>
     //var getMoment = '<%= moment() %>'
     //console.log(getMoment)
+    showTableOrder = ()=>{
+      console.log('working')
+      tableAll.style.display = 'table'
+      tableOrder.style.display = 'none'
+    }
+ 
   //feching order data from order table
     fetch('get-order-data').then((res) =>{
       res.json().then((result) =>{
@@ -52,6 +60,8 @@
 displayOrders = (orders) =>{
    window.tbodyAll = document.getElementById('tbody-all')
    window.tbodyOrder = document.getElementById('tbody-order')
+   window.tableAll = document.getElementById('table-all')
+   window.tableOrder = document.getElementById('table-order')
     console.log(orders)
    orders.forEach(displayToTableAll);
 }
@@ -72,6 +82,8 @@ displayToTableAll = (order)=>{
   tr.addEventListener('click',()=>{
     tbodyOrder.replaceChildren()
     displayToTableOrder(tr.id)
+    tableOrder.style.display = 'table'
+    tableAll.style.display = 'none'
     
   })
   } 
