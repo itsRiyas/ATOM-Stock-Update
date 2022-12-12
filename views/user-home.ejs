@@ -258,7 +258,7 @@
         $("#items").hide()
        // console.log(clicked.innerHTML)
         let tr = document.createElement('tr')
-        
+        //  tr.classList.add('m-3')
         let td_no = document.createElement('td')
         let td_product = document.createElement('td')
         let td_count = document.createElement('td')
@@ -270,7 +270,7 @@
         let text_count = document.createElement('input')
         let td_rate = document.createElement('td')
         td_rate.setAttribute('rate',1)//just setting rate atttriute to fetch through query seelector all @ validation
-
+        td_rate.classList.add('col-sm-12')
         let btn_up = document.createElement('button')
         btn_up.classList.add('btn','btn-outline-secondary', 'm-1','btn-sm')
         btn_up.innerText = '+'

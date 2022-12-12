@@ -5,40 +5,39 @@
   <%-include ('partials/nav') %>
 </header>
 <div >
-  <table class="table mt-5" id="table-all">
-    <thead class="table-dark">
+  <table class="table table-striped mt-5 w3-animate-left" id="table-all" >
+    <thead class="bg-secondary text-white p-3">
       <tr>
-        <td>Date</td>
-        <td>Grand total</td>
+        <td class="p-3">Date</td>
+        <td class="p-3">Grand total</td>
         
       </tr>
     </thead>
-    <tbody id="tbody-all">
+    <tbody id="tbody-all" class="fs-5 text-secondary">
       
     </tbody>
   </table>
 </div> 
 <div>
-  <table class="table table-striped mt-5" id="table-order" style="display: none;">
+  <table class="table table-striped mt-5 w3-animate-left" id="table-order" style="display: none;">
     
-    <thead class="bg-muted">
+    <thead class="bg-primary">
       
-      <tr>
-        <tr><td><button type="button" class="btn btn-primary" onclick="showTableOrder()"><</button></td></tr>
-        <td>item</td>
-        <td>count</td>
-        <td>rate</td>
-        <td>total</td>
+      <tr>  
+        <th class="bg-white"><button type="button" class="btn btn-primary" onclick="showTableOrder()"><</button></th>
+      </tr>
+        <th class="text-white p-3">Item</th>
+        <th class="text-white p-3">Count</th>
+        <th class="text-white p-3">Rate</th>
+        <th class="text-white p-3">Total</th>
       </tr>
     </thead>
-    <tbody id="tbody-order">
+    <tbody id="tbody-order" class="fs-5">
       
     </tbody>
   </table>
 </div>
-<div>
-  
-</div>
+
 <script>
     //var getMoment = '<%= moment() %>'
     //console.log(getMoment)
@@ -70,8 +69,11 @@ displayToTableAll = (order)=>{
   
 
   let tr = document.createElement('tr')
+  
   let td_date = document.createElement('td')
+  td_date.classList.add('p-3', 'fw-bold')
   let td_grand_total = document.createElement('td')
+  td_grand_total.classList.add('p-3','text-success','fw-bold')
   tr.id = order.id
 
   td_date.innerText = order.date
@@ -97,6 +99,10 @@ displayToTableOrder = (id)=>{
     let td_count = document.createElement('td')
     let td_rate = document.createElement('td')
     let td_total = document.createElement('td')
+    td_item.classList.add('p-3')
+    td_count.classList.add('p-3')
+    td_rate.classList.add('p-3','text-danger','fw-bold')
+    td_total.classList.add('p-3')
     td_item.innerText = item.name
     td_count.innerText = item.count
     td_rate.innerText = item.rate
