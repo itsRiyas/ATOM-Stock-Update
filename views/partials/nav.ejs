@@ -1,18 +1,20 @@
 <div class="collapse" id="navbarToggleExternalContent">
   <div class="bg-dark p-4">
-    <h5 class="text-white h4">Sujith k.v</h5>
+    
+    <form action="logout-user" id="logoutSubmit"></form>
   <form action="user-history" id="historySubmit">
-    <ul class="list-group ">
+    <ul class="list-group fs-2">
       <li class="list-group-item bg-dark text-white" onclick="historySubmit.submit()">History</li>
      
-      <li class="list-group-item bg-dark text-white">More (in next update)</li>
+      <li class="list-group-item bg-dark text-white" >More (in next update)</li>
+      <li class="list-group-item bg-dark text-white" onclick="logoutSubmit.submit()">Logout</li>
     </ul>
   </form> 
   </div>
 </div>
 <nav class="navbar navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">A T O M</a>
+    <p class="navbar-brand fs-1" href="#" id="shop-name"></p>
     <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -27,4 +29,6 @@
       })
     })
   }
+
+  
 </script>

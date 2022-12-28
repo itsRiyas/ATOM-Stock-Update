@@ -9,19 +9,37 @@ const mongoose = require('mongoose');
 //var { Order } = require('./db/schema')
 let  {itemList}  = require('./db/schema')
 let  {orderModel}  = require('./db/schema')
+let  {staff} = require('./db/schema')
 //const  itemList = require('./db/schema')
 let router  = express.Router()
 
+var session ={};
+session.username = null;
 
 router.get('/',(req,res)=>{
-    res.render('customer-login')
-    console.log(req.ip)
+    console.log('inside root')
+    console.log(session)
+    
+    
+    console.log(session)
+   if(session.username){  
+    
+    console.log('if works')  
+            res.render('user-home',{ moment:moment,shop_name:session.shop})    
+   }
+    
+    else
+        res.render('customer-login')
+    //console.log(req.session)
+    //console.log()
+    
+    
 })
 
 router.get('/get-products-for-listing', (req,res)=>{
    
    itemList.find({},(err,result)=>{
-    console.log(result)
+    //console.log(result)
     if(!err)
     
         res.json(result)
@@ -31,20 +49,63 @@ router.get('/get-products-for-listing', (req,res)=>{
 })
 
 router.post('/user-home',(req,res)=>{
-   
+    //user name pasasword check here
+    let { username, password} = req.body
     
-    res.render('user-home',{ moment:moment})
+    //session = req.session
+    //session.name = 'abc'
+
+
+    
+    console.log('inside user home router')
+    //console.log(req.body)
+    staff.findOne({
+        username:username,
+        password:password
+    }).then((data)=>{
+       console.log(data)
+        //session = req.session
+        session.username = data.user_name
+        session.shop = data.shop_name
+        console.log('inside findone')
+        console.log(session)
+        res.render('user-home',{ moment:moment,shop_name:data.shop_name,username:username})
+    })
+        
+
+    console.log('out')
+    console.log(session)
+    
+    
+    
+    
+    
+    
+    
 })
 
 router.get('/user-history',(req,res)=>{
    
-   console.log(moment)
-    res.render('user-history',{ moment:moment})
+     console.log('history')
+     
+    res.render('user-history',{ moment:moment,username:session.username})
 })
 
 
+router.get('/logout-user',(req,res)=>{
+   console.log('logout')
+   session.username = null;
+   console.log(session)
+  
+   res.redirect('/')
+   
+      
+ })
+
 router.get('/get-order-data',(req,res)=>{
-   orderModel.find({},(err, result)=>{
+    console.log('this is body')
+    console.log(req.body)
+   orderModel.find({userId:session.username},(err, result)=>{
         if(!err){
             console.log(result)
             res.json(result)
@@ -75,4 +136,7 @@ router.post('/user-home-save-order',(req,res)=>{
 
     
 })
+
+
+
 module.exports = router

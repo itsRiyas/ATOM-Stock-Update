@@ -4,10 +4,13 @@
 <header>
   <%-include ('partials/nav') %>
 </header>
+<style>
+  
+</style>
 <div >
-  <table class="table table-striped mt-5 w3-animate-left" id="table-all" >
+  <table class="table table-striped table-hover mt-5 w3-animate-left" id="table-all" >
     <thead class="bg-secondary text-white p-3">
-      <tr>
+      <tr class="">
         <td class="p-3">Date</td>
         <td class="p-3">Grand total</td>
         
@@ -19,7 +22,7 @@
   </table>
 </div> 
 <div>
-  <table class="table table-striped mt-5 w3-animate-left" id="table-order" style="display: none;">
+  <table class="table table-striped table-hover mt-5 w3-animate-left" id="table-order" style="display: none;">
     
     <thead class="bg-primary">
       
@@ -39,6 +42,7 @@
 </div>
 
 <script>
+    var userId = '<%= username %>'
     //var getMoment = '<%= moment() %>'
     //console.log(getMoment)
     showTableOrder = ()=>{
@@ -46,8 +50,21 @@
       tableAll.style.display = 'table'
       tableOrder.style.display = 'none'
     }
- 
+    console.log(userId)
+  
+/*
+    let req_options = {
+         method: 'GET',
+         
+         headers: {
+            'Content-Type': 'application/json'
+         }
+         
+        }
+
+       req_options.body = JSON.stringify(window.userId)
   //feching order data from order table
+  */
     fetch('get-order-data').then((res) =>{
       res.json().then((result) =>{
         console.log('inside json conversion')
@@ -61,7 +78,8 @@ displayOrders = (orders) =>{
    window.tbodyOrder = document.getElementById('tbody-order')
    window.tableAll = document.getElementById('table-all')
    window.tableOrder = document.getElementById('table-order')
-    console.log(orders)
+   // console.log(orders)
+   console.log(window.userId)
    orders.forEach(displayToTableAll);
 }
 

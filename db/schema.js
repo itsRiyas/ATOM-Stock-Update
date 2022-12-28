@@ -15,9 +15,9 @@ const itm = new mongoose.Schema({
 })
 //orders
 const orderSchema =  new mongoose.Schema({
-    staff: String,
+    userId: String,
     date:String,
-    shop:String,
+   
     grand_total:Number,
     
     items:[items]//nested schema   
@@ -25,7 +25,7 @@ const orderSchema =  new mongoose.Schema({
 })
 
 //staff
-const staff =  new mongoose.Schema({
+const staffSchema =  new mongoose.Schema({
     
     name: String,
     phone:Number,
@@ -58,11 +58,13 @@ const order = mongoose.model('order',orderSchema,'order')//order model
 //const itemListModel  = mongoose.model('itemLists',itemListSchema)
 const itemList = mongoose.model('itemList',itemListSchema, 'itemList')
 
+const staff = mongoose.model('staff',staffSchema,'staff')
 //module.exports = mongoose.model('order',orderSchema, 'order')
 
 module.exports = {
         orderModel:order,
-        itemList:itemList
+        itemList:itemList,
+        staff:staff
 }
 
 

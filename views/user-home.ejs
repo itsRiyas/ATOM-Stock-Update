@@ -6,6 +6,10 @@
 </header>
 
 <style>
+  input{ 
+    touch-action: none;
+   }
+
     #items li:hover{
     background-color: rgb(112, 112, 112);
     color: white;
@@ -59,9 +63,9 @@
 
 
 
-<button type="button" class="btn btn-dark" style="position:fixed;bottom:5;right:5" onclick="saveOrder()">Save</button>
-<div class=" container mt-5">
-    <div class="row">
+<button type="button" class="btn btn-dark fs-2" style="position:fixed;bottom:5;right:5;width:20%;height:5%" onclick="saveOrder()">Save</button>
+<div class=" container-fluid mt-5">
+    <div class="row" style="width:100%">
         <div class="col-sm-12">
             <!--
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -70,21 +74,21 @@
             -->
             <div class="input-group mb-3">
                 
-                <input type="text" id="search" class="form-control"  onkeyup ="filterList()"  placeholder="search here" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                <input type="text" id="search"  style="height:90px;font-size:40px;" class="form-control"  onkeyup ="filterList()"  placeholder="search here" aria-label="Example text with button addon" aria-describedby="button-addon1">
               </div>
 
-              <ul class="list-group" id="items">
+              <ul class="list-group fs-1" id="items">
                
                 
-                    <li class="list-group-item" onclick="addToTable(this)">nnn</li>
+                  
                
               </ul>    
         </div>
 
 
-        <table class="table shadow-lg " id="table-list">
+        <table class="table table-hover shadow-lg table-sm " id="table-list" >
             <thead>
-              <tr class="">
+              <tr class="fs-2">
                 <th scope="col" class="p-4">#</th>
                 <th scope="col" class="p-4">Name</th>
                 <th scope="col" class="p-4">Count</th>
@@ -94,8 +98,8 @@
               </tr>
             </thead>
 
-            <tbody id="table-body">
-              <tr id="grand-total-row">
+            <tbody id="table-body" class="">
+              <tr id="grand-total-row" class="">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -119,8 +123,14 @@
 
 
   <script>
+    
     window.moment = '<%= moment()%>'
-    console.log(moment)
+    window.shop = '<%= shop_name%>'
+    window.userId = '<%= username%>'
+  
+    console.log(userId)
+    document.getElementById('shop-name').innerText = shop
+    //console.log(moment)
     window.count = 0
     window.spinner = document.getElementById('spinner')
     window.tableBody = document.getElementById('table-body')
@@ -225,7 +235,7 @@
             li.setAttribute('rate',filtered[i].rate)
             li.innerHTML = filtered[i].name
             //console.log(li)  
-         li.classList.add('list-group-item')
+         li.classList.add('list-group-item','p-5')
          li.addEventListener('click',()=>{
           addToTable(li)
          })
@@ -258,19 +268,22 @@
         $("#items").hide()
        // console.log(clicked.innerHTML)
         let tr = document.createElement('tr')
-        //  tr.classList.add('m-3')
+          tr.classList.add('m-3','display-6')
         let td_no = document.createElement('td')
+        td_no.classList.add('col-1')
         let td_product = document.createElement('td')
+        td_product.classList.add('col-4')
         let td_count = document.createElement('td')
+        td_count.classList.add('col-2')
         let td_del_parent = document.createElement('td')
-
+        td_del_parent.classList.add('col-1')
         let td_del = document.createElement('button')
         
         td_del_parent.appendChild(td_del)
         let text_count = document.createElement('input')
         let td_rate = document.createElement('td')
         td_rate.setAttribute('rate',1)//just setting rate atttriute to fetch through query seelector all @ validation
-        td_rate.classList.add('col-sm-12')
+        td_rate.classList.add('col-5')
         let btn_up = document.createElement('button')
         btn_up.classList.add('btn','btn-outline-secondary', 'm-1','btn-sm')
         btn_up.innerText = '+'
@@ -278,7 +291,9 @@
           td_rate.firstChild.data = +td_rate.firstChild.data + 1 //+ sign is for converting to intiger lern about it later
           
           //console.log(td_rate.firstChild.data) 
-          td_total.innerText = parseInt(text_count.value) * parseInt(td_rate.innerText) //have to fineach total before finding grand total
+          if(!isNaN( parseInt(text_count.value) * parseInt(td_rate.innerText))){
+            td_total.innerText = parseInt(text_count.value) * parseInt(td_rate.innerText) //have to fineach total before finding grand total
+          }
           findGrandTotal()
         })
         let btn_down = document.createElement('button')
@@ -297,10 +312,10 @@
         let td_total = document.createElement('td')
         
         td_total.setAttribute('sub-total',1)
-        td_total.classList.add('total-each','text-success','h4')
+        td_total.classList.add('total-each','text-success','h4','col-1')
 
         text_count.type = 'number'
-        text_count.classList.add('form-control','w-25')
+        text_count.classList.add('form-control','w-100','fs-2')
 
         
         td_del.classList.add('btn','btn-outline-danger')
@@ -375,7 +390,8 @@
     }
 
     saveOrder = () =>{
-      console.log('calling save order')
+
+      console.log(shop)
       console.log(validateTableData())
       if(validateTableData()){
         console.log('calling saving order')
@@ -434,9 +450,10 @@
         order_data.push(each_item)
       }
       let full_data  = {};
-      full_data.staff = "sujith"
+      
       full_data.date = '<%= moment().format('DD/MM/YY') %>'
-      full_data.shop = "anapuzha"
+      full_data.userId = userId
+
       full_data.grand_total = findGrandTotal()
       
       full_data.items = order_data
@@ -458,7 +475,8 @@
       total_column.forEach((each_item)=>{
         grand_total = grand_total + parseInt(each_item.innerText)
       })
-      document.getElementById('grand-total').innerText = grand_total
+      if(!isNaN(grand_total))
+        document.getElementById('grand-total').innerText = grand_total
       return grand_total
     }
 
