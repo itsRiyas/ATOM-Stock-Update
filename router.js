@@ -66,6 +66,7 @@ router.post('/user-home',(req,res)=>{
        console.log(data)
         //session = req.session
         session.username = data.user_name
+        session.password = data.pass
         session.shop = data.shop_name
         console.log('inside findone')
         console.log(session)
@@ -134,6 +135,11 @@ router.post('/user-home-save-order',(req,res)=>{
         }
     })
 
+    
+})
+
+router.get('/goto-add-stock',(req,res) => {
+    res.render('user-home',{ moment:moment,shop_name:session.shop,username:session.username})
     
 })
 

@@ -2,8 +2,10 @@
   <div class="bg-dark p-4">
     
     <form action="logout-user" id="logoutSubmit"></form>
+    <form action="goto-add-stock" id="gotoAddStock"></form>
   <form action="user-history" id="historySubmit">
     <ul class="list-group fs-2">
+      <li class="list-group-item bg-dark text-white" onclick="gotoAddStock.submit()">Add stock</li>
       <li class="list-group-item bg-dark text-white" onclick="historySubmit.submit()">History</li>
      
       <li class="list-group-item bg-dark text-white" >More (in next update)</li>
@@ -29,6 +31,8 @@
       })
     })
   }
+
+  
 
   
 </script>
