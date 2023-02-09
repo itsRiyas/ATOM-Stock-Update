@@ -11,6 +11,7 @@ app.set(express.static(__dirname + '/node_modules/bootstrap/dist'))
 app.set('view engine', 'ejs')
 app.locals.moment = moment
 const fiveDay = 1000 * 60 * 60 * 24 * 5
+const PORT = process.env.PORT || 3030
 
 
 
@@ -45,7 +46,7 @@ app.use('/',router)
 
 
 
-app.listen(1000,'0.0.0.0',(req)=>{
+app.listen(PORT,'0.0.0.0',(req)=>{
     console.log('server RUNNING @ 1000')
 	//console.log(req.session)
 })
