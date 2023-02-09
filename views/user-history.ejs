@@ -16,7 +16,7 @@
         
       </tr>
     </thead>
-    <tbody id="tbody-all" class="fs-5 text-secondary">
+    <tbody id="tbody-all" class="fs-5 text-secondary ">
       
     </tbody>
   </table>
@@ -35,7 +35,7 @@
         <th class="text-white p-3">Total</th>
       </tr>
     </thead>
-    <tbody id="tbody-order" class="fs-5">
+    <tbody id="tbody-order" class="">
       
     </tbody>
   </table>
@@ -43,6 +43,7 @@
 
 <script>
     var userId = '<%= username %>'
+    document.getElementById('shop-name').innerText = '<%= shop_name %>'
     //var getMoment = '<%= moment() %>'
     //console.log(getMoment)
     showTableOrder = ()=>{
@@ -89,9 +90,9 @@ displayToTableAll = (order)=>{
   let tr = document.createElement('tr')
   
   let td_date = document.createElement('td')
-  td_date.classList.add('p-3', 'fw-bold')
+  td_date.classList.add('p-3', 'fw-bold' ,'fs-1')
   let td_grand_total = document.createElement('td')
-  td_grand_total.classList.add('p-3','text-success','fw-bold')
+  td_grand_total.classList.add('p-3','text-success','fw-bold','fs-1')
   tr.id = order.id
 
   td_date.innerText = order.date
@@ -117,10 +118,10 @@ displayToTableOrder = (id)=>{
     let td_count = document.createElement('td')
     let td_rate = document.createElement('td')
     let td_total = document.createElement('td')
-    td_item.classList.add('p-3')
-    td_count.classList.add('p-3')
-    td_rate.classList.add('p-3','text-danger','fw-bold')
-    td_total.classList.add('p-3')
+    td_item.classList.add('p-3','fs-1')
+    td_count.classList.add('p-3','fs-1')
+    td_rate.classList.add('p-3','text-danger','fw-bold','fs-1')
+    td_total.classList.add('p-3','fs-1')
     td_item.innerText = item.name
     td_count.innerText = item.count
     td_rate.innerText = item.rate

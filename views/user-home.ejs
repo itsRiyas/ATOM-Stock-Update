@@ -67,22 +67,19 @@
 <div class=" container-fluid mt-5">
     <div class="row" style="width:100%">
         <div class="col-sm-12">
-            <!--
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Add
-            </button>
-            -->
+            
             <div class="input-group mb-3">
                 
-                <input type="text" id="search"  style="height:90px;font-size:40px;" class="form-control"  onkeyup ="filterList()"  placeholder="search here" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                <input type="text" id="search"  style="height:90px;font-size:40px;" class="form-control"  onkeyup ="showSuggestions();filterList()"  placeholder="search here" aria-label="Example text with button addon" aria-describedby="button-addon1">
               </div>
 
-              <ul class="list-group fs-1" id="items">
-               
+             <div id="ul-div">
+              <button type="button" class="btn-close"  aria-label="Close" onclick="closeSuggestions()"></button>
+                <ul class="list-group fs-1" id="items" >
+                    
                 
-                  
-               
-              </ul>    
+                </ul>
+            </div>    
         </div>
 
 
@@ -91,7 +88,7 @@
               <tr class="fs-2">
                 <th scope="col" class="p-4">#</th>
                 <th scope="col" class="p-4">Name</th>
-                <th scope="col" class="p-4">Count</th>
+                 <th scope="col" class="p-4">Count</th>
                 <th scope="col" class="p-4">rate</th>
                 <th scope="col" class="p-4">total</th>
                 <th scope="col" class="p-4"><button class="btn btn-danger "onclick="clearAllTableData()">clear all</button></th>      
@@ -165,7 +162,7 @@
       checkRate = (rates)=>{
         console.log('checking rate')
         console.log(rates)
-        let regxNum = /^([1-9][0-9]{0,2})$/ //just copy pase IMPORTANT 9.5 return false 
+        let regxNum = /^\d+(\.\d+)?$/   
         let isRateOk = rates.every((rate) => regxNum.test(rate))
         console.log(isRateOk)
         return isRateOk
@@ -292,7 +289,7 @@
           
           //console.log(td_rate.firstChild.data) 
           if(!isNaN( parseInt(text_count.value) * parseInt(td_rate.innerText))){
-            td_total.innerText = parseInt(text_count.value) * parseInt(td_rate.innerText) //have to fineach total before finding grand total
+            td_total.innerText = parseInt(text_count.value) * parseFloat(td_rate.innerText) //have to fineach total before finding grand total
           }
           findGrandTotal()
         })
@@ -304,7 +301,7 @@
         btn_down.addEventListener('click',()=>{
           //console.log(td_rate)
           td_rate.firstChild.data = +td_rate.firstChild.data - 1   
-          td_total.innerText = parseInt(text_count.value) * parseInt(td_rate.innerText) //have to fineach total before finding grand total
+          td_total.innerText = parseInt(text_count.value) * parseFloat(td_rate.innerText) //have to fineach total before finding grand total
 
           findGrandTotal()
           
@@ -321,8 +318,10 @@
         td_del.classList.add('btn','btn-outline-danger')
         td_del.innerText = 'delete'
         td_del.addEventListener('click',(event)=>{
-          console.log(event.path)//get the path of that event in dom as an array
-          event.path[2].remove()//first elemet is 'tr'
+          //console.log(event)
+          console.log(event.composedPath())
+          
+          event.composedPath()[2].remove()//first elemet is 'tr'
           findGrandTotal()
         })
 
@@ -333,7 +332,7 @@
         td_rate.innerText = clicked.getAttribute('rate')
         text_count.addEventListener('keyup',()=>{
         
-          td_total.innerText = parseInt(text_count.value) * parseInt(td_rate.innerText)
+          td_total.innerText = parseInt(text_count.value) * parseFloat(td_rate.innerText)
           findGrandTotal()
         })
 
@@ -413,6 +412,7 @@
           spinner.classList.add('d-none')
         },2000)
         clearAllTableData()
+        document.getElementById('search').value = ""
 
       })
     }
@@ -473,12 +473,20 @@
       let grand_total = 0
       let total_column = document.querySelectorAll('.total-each')
       total_column.forEach((each_item)=>{
-        grand_total = grand_total + parseInt(each_item.innerText)
+        grand_total = grand_total + parseFloat(each_item.innerText)
       })
       if(!isNaN(grand_total))
         document.getElementById('grand-total').innerText = grand_total
       return grand_total
     }
 
+
+    closeSuggestions = () =>{
+      document.getElementById('ul-div').style.display = "none"
+    }
+
+    showSuggestions = () =>{
+      document.getElementById('ul-div').style.display = "block"
+    }
 
 </script>

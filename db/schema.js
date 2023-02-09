@@ -46,6 +46,21 @@ const shop =  new mongoose.Schema({
 })
 
 
+//collection
+const collectionSchema =  new mongoose.Schema({
+    date:Date,
+    shop_name: String,
+    staff:String,
+    cash:Number,
+    gpay:Number,
+    box:Number,
+    salary:Number,
+    expense:Number,
+    total_sale:Number,
+    cash_balance:Number
+
+})
+
 const itemListSchema =  new mongoose.Schema({ //its for listing only on li only
    items:[itm]
     
@@ -59,12 +74,14 @@ const order = mongoose.model('order',orderSchema,'order')//order model
 const itemList = mongoose.model('itemList',itemListSchema, 'itemList')
 
 const staff = mongoose.model('staff',staffSchema,'staff')
+const collection = mongoose.model('collection',collectionSchema,'collection')
 //module.exports = mongoose.model('order',orderSchema, 'order')
 
 module.exports = {
         orderModel:order,
         itemList:itemList,
-        staff:staff
+        staff:staff,
+        collectionModel:collection
 }
 
 

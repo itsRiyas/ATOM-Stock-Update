@@ -1,0 +1,174 @@
+<head>
+    <%-include ('partials/header') %>
+  </head>
+  <div class="collapse" id="navbarToggleExternalContent">
+    <p><li> Logout</li></p>
+  </div>
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <p class="navbar-brand fs-1" href="#" id="shop-name"></p>
+      <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </nav>
+  <ul class="nav nav-pills nav-fill mt-3">
+    <li class="nav-item" ondblclick="showCollections()">
+      <a class="nav-link " aria-current="page" href="#">Collections</a>
+    </li>
+    <li class="nav-item" onclick="showStock()">
+      <a class="nav-link" href="#">Stocks</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+    </li>
+  </ul>
+
+  <div class="btn-group float-end">
+    <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      
+    </button>
+    <ul class="dropdown-menu">
+      <li id="all" class="dropdown-item active" onclick="showCollections(this)" data-value="all">***</li>
+      <li class="dropdown-item" onclick="showCollections(this)" data-value="anapuzha">Anapuzha</li>
+      <li class="dropdown-item" onclick="showCollections(this)" data-value="uk42">UK 42</li>
+      <li class="dropdown-item" onclick="showCollections(this)" data-value="vedimara"> Vediamra</li>
+      <li class="dropdown-item" onclick="showCollections(this)" data-value="chalakka">Chalakka</li>
+      <li class="dropdown-item" onclick="showCollections(this)" data-value="cusat">CUSAT </li>
+      <li class="dropdown-item" onclick="showCollections(this)" data-value="vam">VAM</li>
+    </ul>
+  </div>
+    <table class="table table-light table-striped mt-2 ">
+        <thead>
+        <tr>
+           <th>Date</th>
+           <th>Shop name</th>
+           <th>Cash</th>
+           <th>gpay</th>
+           <th>box</th>
+           <th>total</th> 
+        </tr>
+        </thead>
+        <% result.forEach((item)=>{ %>
+            <tr>
+                <td><%=item.date %></td>
+                <td><%=item.shop_name %></td>
+                <td><%=item.cash %></td>
+                <td><%=item.gpay %></td>
+                <td><%=item.box %></td>
+                <td><%=item.total_sale %></td>
+            </tr> 
+        <% }) %>
+        
+    </table>
+
+    <!--stock table all-->
+    <table class="table table-striped table-hover mt-5 w3-animate-left" id="table-order-admin" >
+    
+      <thead class="bg-primary">
+        
+        <tr>  
+          <th class="bg-white"><button type="button" class="btn btn-primary" onclick="showTableOrder()"><</button></th>
+        </tr>
+          <th class="text-white p-3">Date</th>
+          <th class="text-white p-3">Shop</th>
+          
+        </tr>
+      </thead>
+      <tbody id="tbody-admin-order" class="">
+        
+      </tbody>
+    </table>
+     
+      
+    <table class="table table-striped table-hover mt-5 w3-animate-left" id="table-order" >
+    
+      <thead class="bg-primary">
+        
+        <tr>  
+          <th class="bg-white"><button type="button" class="btn btn-primary" onclick="showTableOrder()"><</button></th>
+        </tr>
+          <th class="text-white p-3">Item</th>
+          <th class="text-white p-3">Count</th>
+          <th class="text-white p-3">Rate</th>
+          <th class="text-white p-3">Total</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-order-admin" class="">
+        
+      </tbody>
+    </table>
+
+   <script>
+        var selected_shop = 'all'
+         var pre_ele = document.getElementById('all')
+
+        showCollections = (ele)=>{
+            console.log(ele.getAttribute('data-value'))
+            pre_ele.classList.remove('active')
+            ele.classList.add('active')
+            pre_ele = ele
+        }
+        showStock = ()=>{
+          console.log('showing stock')
+          fetch('show-stock-admin').then((res)=>{
+            res.json().then((result)=>{
+             // console.log(result)
+             window.orders = result
+              displayAllStock(result)
+            })
+          })
+        }
+
+
+        displayAllStock = (orders) =>{
+          console.log(orders)
+          orders.forEach((order )=> {
+            let tr = document.createElement('tr')
+            tr.id = order._id
+            tr.addEventListener('click',()=>{
+              //tbodyOrder.replaceChildren()
+              document.getElementById('tbody-order-admin').replaceChildren()
+              displayToTableOrder(tr  .id)
+            //  tableOrder.style.display = 'table'
+             // tableAll.style.display = 'none'
+              
+            })
+
+            let td_date = document.createElement('td')
+            let td_shop = document.createElement('td')
+            td_date.innerText = order.date
+            td_shop.innerText = order.userId
+            tr.append(td_date,td_shop)
+            document.getElementById('tbody-admin-order').appendChild(tr)
+            
+          });
+
+        }
+
+        
+displayToTableOrder = (id)=>{
+  console.log(id  )
+  let items = orders.find((item)=> item._id == id ).items
+  console.log(items)
+  items.forEach((item)=>{
+    let tr = document.createElement('tr')
+    let td_item = document.createElement('td')
+    let td_count = document.createElement('td')
+    let td_rate = document.createElement('td')
+    let td_total = document.createElement('td')
+    td_item.classList.add('p-3','fs-1')
+    td_count.classList.add('p-3','fs-1')
+    td_rate.classList.add('p-3','text-danger','fw-bold','fs-1')
+    td_total.classList.add('p-3','fs-1')
+    td_item.innerText = item.name
+    td_count.innerText = item.count
+    td_rate.innerText = item.rate
+    td_total.innerText = item.total
+    tr.append(td_item,td_count,td_rate,td_total)
+    document.getElementById('tbody-order-admin').appendChild(tr)
+  })
+
+}
+   </script>   

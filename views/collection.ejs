@@ -1,0 +1,227 @@
+<head>
+    <%-include ('partials/header') %>
+  </head>
+  <header>
+    <%-include ('partials/nav') %>
+  </header>
+  <style>
+    
+  </style>
+<form class="mt-5 p-5">
+    <div class="form-group mt-5">
+        <label  class="form-label fs-3" >Cash sale</label>
+        <input type="number" id="cash" class="form-control text-success" style="height:80px;font-size:30px;" onkeyup="calculateTotal();clearErrorMessage()">
+        <small id="info-cash-blank" class="text-danger d-none display-5">Enter today's cash sale</small>
+        <p id="info-cash-length" class="text-danger d-none display-5">Wrong total cash</p>
+    </div>
+    <div class="form-group mt-5 ">
+        <label  class="form-label fs-3" >Google pay</label>
+        <input type="number" id="gpay"  class="form-control text-success"  style="height:80px;font-size:30px;" onkeyup="calculateTotal();clearErrorMessage()">
+        <small id="info-gpay-blank" class="text-danger d-none display-5">Enter total google pay</small>
+        <p id="info-gpay-length" class="text-danger d-none display-5">Wrong google pay</p>
+    </div>
+    <div class="form-group mt-5 ">
+        <label  class="form-label fs-3">Pettiyil ittath</label>
+        <input type="number" id="box"  class="form-control"  style="height:80px;font-size:30px;" onkeyup="calculateTotal();clearErrorMessage()">
+        <small id="info-box-blank" class="text-danger d-none display-5">Enter Pettiyil ittath</small>
+        <p id="info-box-length" class="text-danger d-none display-5">Wrong amount</p>
+    </div>
+    
+    <div class="form-group mt-5 ">
+        <label  class="form-label fs-3" >Salary</label>
+        <input type="number" id="salary"  class="form-control"  style="height:80px;font-size:30px;" onkeyup="calculateTotal();clearErrorMessage()">
+        <small id="info-salary-blank" class="text-danger d-none display-5">Enter Salary</small>
+        <p id="info-salary-length" class="text-danger d-none display-5">Wrong Salary</p>
+    </div>
+    <div class="form-group mt-5">
+        <label  class="form-label fs-3" >Other expense</label>
+        <input type="number" id="expense"  class="form-control text-danger"  style="height:80px;font-size:30px;" onkeyup="calculateTotal();clearErrorMessage()">
+        <small id="info-expense-blank" class="text-danger d-none display-5">Enter today's total expense</small>
+        <p id="info-expense-length" class="text-danger d-none display-5">Wrong expense</p>
+    </div>
+    
+    <button type="button" class="btn btn-dark fs-2" style="position:fixed;bottom:5;right:5;width:20%;height:5%" onclick="saveCollection()">Save</button>
+</form>
+<div class="d-flex justify-content-between m-5">
+    <p class="display-4">Total sale<p class="display-2 text-success" id="total-sale">0</p></p>
+    <p class="display-4">balance cash<p class="display-2 text-secondary" id="cash-balance">0</p></p>
+</div>
+<script>    
+    window.moment = '<%= moment()%>'
+    window.shop = '<%= shop_name%>'
+    window.userId = '<%= username%>'
+
+    document.getElementById('shop-name').innerText = shop
+
+    window.cash = document.getElementById('cash')
+    window.gpay = document.getElementById('gpay')
+    window.box = document.getElementById('box')
+    window.salary = document.getElementById('salary')
+    window.expense = document.getElementById('expense')
+    expense.value  = 0 //escaping nan    
+    window.totalSale = document.getElementById('total-sale')
+    window.cashBalance = document.getElementById('cash-balance')
+
+    //for err info
+    window.errCashBlank = document.getElementById('info-cash-blank')
+    window.errCashLimit = document.getElementById('info-cash-length')
+    
+    window.errGpayBlank = document.getElementById('info-gpay-blank')
+    window.errGpayLimit = document.getElementById('info-gpay-length')
+
+    window.errBoxBlank = document.getElementById('info-box-blank')
+    window.errBoxLimit = document.getElementById('info-box-length')
+
+    window.errSalaryBlank = document.getElementById('info-salary-blank')
+    window.errSalaryLimit = document.getElementById('info-salary-length')
+
+    window.errExpenseBlank = document.getElementById('info-expense-blank')
+    window.errExpenseLimit = document.getElementById('info-expense-length')
+
+
+
+saveCollection = ()=>{
+    //setCollectionVariables()
+    let result = checkCollectionValidity()
+    
+    let valid = result.every(Boolean)
+    
+    if(valid){
+        clearErrorMessage()
+        let reqOption = getRequestOptions()
+        console.log(reqOption)
+        fetch('save-collection',reqOption).then((res)=>{
+            res.json().then((result)=>{
+                console.log(result)
+                console.log('saved')
+                clearAllFields()
+            })
+        })
+    }
+    else{
+        showErrorMessages(result)
+    }
+
+    
+
+   
+    
+}
+getRequestOptions = ()=>{
+    let data = {}
+    data.cash = cash.value    
+    data.gpay = gpay.value
+    data.box = box.value
+    data.salary = salary.value
+    data.expense = expense.value
+
+        
+    data.date = new Date()
+    data.shop_name = shop
+    data.staff = userId
+
+    data.total_sale = parseInt(cash.value) + parseInt(gpay.value)
+    data.cash_balance = parseInt(cash.value) - (parseInt(box.value)+ parseInt(salary.value)+ parseInt(expense.value))
+    
+    return{
+        method:'POST',
+        headers: {
+            'Content-Type': 'application/json'
+         },
+         body:JSON.stringify(data)
+    }
+}
+
+
+checkCollectionValidity = () =>{
+    //console.log(cash,gpay,box,salary,expense)
+    let reg = /\d/
+    let values = ['cash','gpay','box','salary','expense']
+    let checekResult = []
+    
+    //checking all blamk or not and regx
+    values.forEach((ele)=>{
+        console.log(window[ele].value )
+        
+        window[ele].value != '' ?  checekResult.push(true): checekResult.push(false)
+        reg.test(window[ele].value) ? checekResult.push(true): checekResult.push(false)
+        
+    })
+   
+
+
+    
+    return checekResult
+}
+
+calculateTotal = () => {
+    console.log(cash.value)
+
+    
+    totalSale.innerText = parseInt(cash.value) + parseInt(gpay.value)
+    cashBalance.innerText = parseInt(cash.value) - (parseInt(box.value)+ parseInt(salary.value)+ parseInt(expense.value))
+}
+
+clearAllFields = () =>{
+    console.log('clearing all fields')
+    cash.value = ""
+    gpay.value = ""
+    box.value = "" 
+    salary.value = ""
+    expense.value = ""
+    
+    expense.value  = 0 //escaping nan    
+    totalSale.innerText = ""
+    cashBalance.innerText = ""
+    
+   
+}
+
+showErrorMessages = (result) =>{
+    console.log('showing error messages')
+    console.log(result)
+    if(!result[0])
+        errCashBlank.classList.remove('d-none')
+    if(!result[1])
+        errCashLimit.classList.remove('d-none')
+
+    if(!result[2])
+        errGpayBlank.classList.remove('d-none')
+    if(!result[3])
+        errGpayLimit.classList.remove('d-none')
+
+
+    if(!result[4])
+        errBoxBlank.classList.remove('d-none')
+    if(!result[5])
+        errBoxLimit.classList.remove('d-none')
+
+
+    if(!result[6])
+        errSalaryBlank.classList.remove('d-none')
+    if(!result[7])
+        errSalaryLimit.classList.remove('d-none')
+
+
+    if(!result[8])
+        errExpenseBlank.classList.remove('d-none')
+    if(!result[9])
+        errExpenseLimit.classList.remove('d-none')
+
+}
+
+clearErrorMessage = () =>{
+        console.log('calling clear error message')
+        errCashBlank.classList.add('d-none')
+        errGpayBlank.classList.add('d-none')
+        errBoxBlank.classList.add('d-none')
+        errSalaryBlank.classList.add('d-none')
+        errExpenseBlank.classList.add('d-none')
+
+        errCashLimit.classList.add('d-none')
+        errGpayLimit.classList.add('d-none')
+        errBoxLimit.classList.add('d-none')
+        errSalaryLimit.classList.add('d-none')
+        errExpenseLimit.classList.add('d-none')
+    }
+</script>

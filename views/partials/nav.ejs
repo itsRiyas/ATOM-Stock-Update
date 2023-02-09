@@ -3,12 +3,13 @@
     
     <form action="logout-user" id="logoutSubmit"></form>
     <form action="goto-add-stock" id="gotoAddStock"></form>
+    <form action="collection" id="collectionSubmit"></form>
   <form action="user-history" id="historySubmit">
     <ul class="list-group fs-2">
-      <li class="list-group-item bg-dark text-white" onclick="gotoAddStock.submit()">Add stock</li>
-      <li class="list-group-item bg-dark text-white" onclick="historySubmit.submit()">History</li>
-     
-      <li class="list-group-item bg-dark text-white" >More (in next update)</li>
+      <li class="list-group-item bg-dark text-white" id=" collection-tab" onclick="collectionSubmit.submit()">Collection</li>
+      <li class="list-group-item bg-dark text-white" id="stock-tab" onclick="gotoAddStock.submit()">Add stock</li>
+      <li class="list-group-item bg-dark text-white" id="history-tab" onclick="historySubmit.submit()">Stock History</li>
+      
       <li class="list-group-item bg-dark text-white" onclick="logoutSubmit.submit()">Logout</li>
     </ul>
   </form> 
@@ -16,7 +17,7 @@
 </div>
 <nav class="navbar navbar-dark bg-dark">
   <div class="container-fluid">
-    <p class="navbar-brand fs-1" href="#" id="shop-name"></p>
+    <p class="navbar-brand fs-1"  id="shop-name"></p>
     <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -24,6 +25,8 @@
 </nav>
 <script>
   getHistory = () =>{
+ //  $('#history-tab').hide()
+    document.getElementById('stock-tab').disabled = true
     console.log('working')
     fetch('/get-history').then((res)=>{
       res.json().then((res)=>{

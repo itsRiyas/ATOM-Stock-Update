@@ -10,22 +10,21 @@ const mongoose = require('mongoose');
 let  {itemList}  = require('./db/schema')
 let  {orderModel}  = require('./db/schema')
 let  {staff} = require('./db/schema')
+let  {collectionModel} = require('./db/schema')
 //const  itemList = require('./db/schema')
 let router  = express.Router()
 
-var session ={};
-session.username = null;
 
 router.get('/',(req,res)=>{
     console.log('inside root')
-    console.log(session)
-    
-    
-    console.log(session)
-   if(session.username){  
+   console.log(req.cookies)
+   // console.log(req.session)   
+    console.log(req.sessionID)
+  //  //console.log(session)
+   if(req.session.username){  
     
     console.log('if works')  
-            res.render('user-home',{ moment:moment,shop_name:session.shop})    
+            res.render('user-home',{ moment:moment,shop_name:req.session.shop,username:req.session.user_name})    
    }
     
     else
@@ -51,7 +50,7 @@ router.get('/get-products-for-listing', (req,res)=>{
 router.post('/user-home',(req,res)=>{
     //user name pasasword check here
     let { username, password} = req.body
-    
+    console.log(req.session)
     //session = req.session
     //session.name = 'abc'
 
@@ -65,17 +64,17 @@ router.post('/user-home',(req,res)=>{
     }).then((data)=>{
        console.log(data)
         //session = req.session
-        session.username = data.user_name
-        session.password = data.pass
-        session.shop = data.shop_name
+        req.session.username = data.user_name
+        req.session.password = data.pass
+        req.session.shop = data.shop_name
         console.log('inside findone')
-        console.log(session)
+       
         res.render('user-home',{ moment:moment,shop_name:data.shop_name,username:username})
     })
         
 
     console.log('out')
-    console.log(session)
+   // console.log(session)
     
     
     
@@ -89,14 +88,14 @@ router.get('/user-history',(req,res)=>{
    
      console.log('history')
      
-    res.render('user-history',{ moment:moment,username:session.username})
+    res.render('user-history',{ moment:moment,username:req.session.username,shop_name:req.session.shop})
 })
 
 
 router.get('/logout-user',(req,res)=>{
    console.log('logout')
-   session.username = null;
-   console.log(session)
+   req.session.destroy()
+   
   
    res.redirect('/')
    
@@ -106,7 +105,7 @@ router.get('/logout-user',(req,res)=>{
 router.get('/get-order-data',(req,res)=>{
     console.log('this is body')
     console.log(req.body)
-   orderModel.find({userId:session.username},(err, result)=>{
+   orderModel.find({userId:req.session.username},(err, result)=>{
         if(!err){
             console.log(result)
             res.json(result)
@@ -139,10 +138,54 @@ router.post('/user-home-save-order',(req,res)=>{
 })
 
 router.get('/goto-add-stock',(req,res) => {
-    res.render('user-home',{ moment:moment,shop_name:session.shop,username:session.username})
+    res.render('user-home',{ moment:moment,shop_name:req.session.shop,username:req.session.username})
     
 })
 
+router.get('/collection',(req,res) => {
+    res.render('collection',{ moment:moment,shop_name:req.session.shop,username:req.session.username})
+    
+})
 
+router.post('/save-collection',(req,res) => {
+    let collection = new collectionModel(req.body) 
+    collection.save((err,doc)=>{
+        if(!err){
+            res.json({msg:'colection saved successfully'})
+        }
+        else{
+            res.json('error')
+        }
+    })
+   
+    
+    
+})
+
+//from here admin starts
+
+router.get('/admin',(req,res)=>{
+    res.render('admin-login')
+})
+
+router.get('/admin-home',(req,res)=>{
+    console.log('inside admin home')
+    collectionModel.find((err,result)=>{
+        if(!err){
+            res.render('admin-home',{result})
+        }    
+    })
+    
+})
+router.get('/show-stock-admin',(req,res)=>{
+   
+    console.log('history')
+    orderModel.find({},(err,data)=>{
+        if(!err){
+            res.json(data)
+        }
+    })
+   //
+})
 
 module.exports = router
