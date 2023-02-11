@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3030
 
 
 
-mongoose.connect('mongodb://localhost:27017/testing', {
+mongoose.connect('mongodb+srv://riyaz:riyaz@cluster0.ullciiz.mongodb.net/test', {
 	useNewUrlParser:true,
 	useUnifiedTopology:true
 },(err)=>{
