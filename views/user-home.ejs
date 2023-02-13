@@ -89,8 +89,8 @@
                 <th scope="col" class="p-4">#</th>
                 <th scope="col" class="p-4">Name</th>
                  <th scope="col" class="p-4">Count</th>
-                <th scope="col" class="p-4">rate</th>
-                <th scope="col" class="p-4">total</th>
+                <th scope="col" class="p-4">Rate</th>
+                <th scope="col" class="p-4">Total</th>
                 <th scope="col" class="p-4"><button class="btn btn-danger "onclick="clearAllTableData()">clear all</button></th>      
               </tr>
             </thead>
@@ -408,9 +408,7 @@
         spinner.classList.remove('d-none')
       fetch('/user-home-save-order',req_options).then((res)=>res.json()).then(()=>{
         console.log("saved")
-        setTimeout(()=>{
-          spinner.classList.add('d-none')
-        },2000)
+        spinner.classList.add('d-none')
         clearAllTableData()
         document.getElementById('search').value = ""
 

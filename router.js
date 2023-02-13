@@ -63,7 +63,11 @@ router.post('/user-home',(req,res)=>{
         password:password
     }).then((data)=>{
        console.log(data)
-        //session = req.session
+       if(data === null){
+        res.send(500,'someting wend wrong')
+       }
+       else{
+             //session = req.session
         req.session.username = data.user_name
         req.session.password = data.pass
         req.session.shop = data.shop_name
@@ -71,6 +75,8 @@ router.post('/user-home',(req,res)=>{
        
        // res.render('user-home',{ moment:moment,shop_name:data.shop_name,username:username})
        res.redirect('all-collection')
+       }
+       
     })
         
 

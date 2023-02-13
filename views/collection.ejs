@@ -69,6 +69,7 @@
     window.moment = '<%= moment()%>'
     window.shop = '<%= shop_name%>'
     window.userId = '<%= username%>'
+    window.spinner = document.getElementById('spinner')
 
     document.getElementById('shop-name').innerText = shop
 
@@ -109,12 +110,12 @@ saveCollection = ()=>{
         clearErrorMessage()
         let reqOption = getRequestOptions()
         console.log(reqOption)
-
+        spinner.classList.add('d-none')
         fetch('save-collection',reqOption).then((res)=>{
             res.json().then((result)=>{
                 console.log(result)
                 console.log('saved')
-
+                spinner.classList.add('d-none')
                 $('#collection-saved-modal').modal('show')
                 clearAllFields()
             })
