@@ -9,6 +9,9 @@ const app  = new express()
 const mongoose = new require('mongoose')
 app.set(express.static(__dirname + '/node_modules/bootstrap/dist'))
 app.set('view engine', 'ejs')
+
+app.use(express.static('public'));
+
 app.locals.moment = moment
 const fiveDay = 1000 * 60 * 60 * 24 * 5
 const PORT = process.env.PORT || 3030

@@ -4,9 +4,11 @@
     <form action="logout-user" id="logoutSubmit"></form>
     <form action="goto-add-stock" id="gotoAddStock"></form>
     <form action="collection" id="collectionSubmit"></form>
+    <form action="all-collection" id="showCollectionSubmit"></form>
   <form action="user-history" id="historySubmit">
     <ul class="list-group fs-2">
-      <li class="list-group-item bg-dark text-white" id=" collection-tab" onclick="collectionSubmit.submit()">Collection</li>
+      <li class="list-group-item bg-dark text-white" id=" collection-tab" onclick="collectionSubmit.submit()">Add collection</li>
+      <li class="list-group-item bg-dark text-white" id=" collection-tab" onclick="showCollectionSubmit.submit()">Collections History</li>
       <li class="list-group-item bg-dark text-white" id="stock-tab" onclick="gotoAddStock.submit()">Add stock</li>
       <li class="list-group-item bg-dark text-white" id="history-tab" onclick="historySubmit.submit()">Stock History</li>
       

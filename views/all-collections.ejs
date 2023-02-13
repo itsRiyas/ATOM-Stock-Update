@@ -1,0 +1,38 @@
+<%-include ('partials/header') %>
+<header>
+    <%-include ('partials/nav') %>
+</header>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>cash</th>
+            <th>gpay</th>
+            <th>box</th>
+            <th>salary</th>
+            <th>expense</th>
+            <th>total_sale</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for (i in data) { %>
+
+            <tr class="display-6 m-3">
+                <td ><%= moment(data[i].date).format("DD/MM/YY") %></td>   
+                <td><%= data[i].cash %></td>
+                <td><%= data[i].gpay %></td>
+                <td><%= data[i].box %></td>
+                <td><%= data[i].salary %></td>
+                <td class="text-danger"><%= data[i].expense %></td>
+                <td class="text-dark fw-bold"><%= data[i].total_sale %></td>
+
+            </tr>
+            <% } %>
+    </tbody>
+</table>
+
+<script>
+   // window.moment = '<%= moment()%>'
+   document.getElementById('shop-name').innerText = '<%= shop_name %>'
+    window.userId = '<%= username%>'
+</script>

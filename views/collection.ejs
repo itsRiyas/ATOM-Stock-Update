@@ -4,9 +4,28 @@
   <header>
     <%-include ('partials/nav') %>
   </header>
-  <style>
-    
-  </style>
+  
+  <%-include ('partials/spinner') %>
+
+<!--collection saved modal-->
+<div class="modal fade" tabindex="-1" id="collection-saved-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Done</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Saved</p>
+        </div>
+        <div class="modal-footer">
+          
+          <button type="button" class="btn btn-dark" data-bs-dismiss="modal" onclick="showAllCollections()">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div> 
+  <form action="all-collection" id="showCollectionSubmit"></form>
 <form class="mt-5 p-5">
     <div class="form-group mt-5">
         <label  class="form-label fs-3" >Cash sale</label>
@@ -90,10 +109,13 @@ saveCollection = ()=>{
         clearErrorMessage()
         let reqOption = getRequestOptions()
         console.log(reqOption)
+
         fetch('save-collection',reqOption).then((res)=>{
             res.json().then((result)=>{
                 console.log(result)
                 console.log('saved')
+
+                $('#collection-saved-modal').modal('show')
                 clearAllFields()
             })
         })
@@ -224,4 +246,10 @@ clearErrorMessage = () =>{
         errSalaryLimit.classList.add('d-none')
         errExpenseLimit.classList.add('d-none')
     }
+
+   showAllCollections = () =>{
+
+    document.getElementById('showCollectionSubmit').submit()
+    
+   } 
 </script>

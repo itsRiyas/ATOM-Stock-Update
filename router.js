@@ -69,7 +69,8 @@ router.post('/user-home',(req,res)=>{
         req.session.shop = data.shop_name
         console.log('inside findone')
        
-        res.render('user-home',{ moment:moment,shop_name:data.shop_name,username:username})
+       // res.render('user-home',{ moment:moment,shop_name:data.shop_name,username:username})
+       res.redirect('all-collection')
     })
         
 
@@ -144,6 +145,21 @@ router.get('/goto-add-stock',(req,res) => {
 
 router.get('/collection',(req,res) => {
     res.render('collection',{ moment:moment,shop_name:req.session.shop,username:req.session.username})
+    
+})
+
+router.get('/all-collection',(req,res) => {
+    //find all collection  by shop name or username and send it back to the client side
+    console.log(req.session)
+    collectionModel.find({staff:req.session.username},(err, result)=>{
+        if(!err){
+            console.log(result)
+            res.render('all-collections',{ moment:moment,shop_name:req.session.shop,username:req.session.username,data:result})        
+            
+        }
+   })
+
+    
     
 })
 
