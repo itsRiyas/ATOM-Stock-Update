@@ -124,7 +124,7 @@
     window.moment = '<%= moment()%>'
     window.shop = '<%= shop_name%>'
     window.userId = '<%= username%>'
-  
+    
     console.log(userId)
     document.getElementById('shop-name').innerText = shop
     //console.log(moment)
@@ -280,6 +280,10 @@
         let text_count = document.createElement('input')
         let td_rate = document.createElement('td')
         td_rate.setAttribute('rate',1)//just setting rate atttriute to fetch through query seelector all @ validation
+
+       
+
+
         td_rate.classList.add('col-5')
         let btn_up = document.createElement('button')
         btn_up.classList.add('btn','btn-outline-secondary', 'm-1','btn-sm')
@@ -335,6 +339,15 @@
           td_total.innerText = parseInt(text_count.value) * parseFloat(td_rate.innerText)
           findGrandTotal()
         })
+/*
+
+        if (window.userId != 'suttuparavoor'){//for hiding rate from users
+          td_rate.classList.add('d-none')
+          td_total.classList.add('d-none')
+          td_rate.classList.add('d-none')
+
+        }
+ */
 
         //findGrandTotal()
         td_count.appendChild(text_count)

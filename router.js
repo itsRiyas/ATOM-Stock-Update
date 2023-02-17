@@ -184,30 +184,35 @@ router.post('/save-collection',(req,res) => {
     
 })
 
-//from here admin starts
+//admin for real admin
 
-router.get('/admin',(req,res)=>{
-    res.render('admin-login')
-})
-
-router.get('/admin-home',(req,res)=>{
-    console.log('inside admin home')
-    collectionModel.find((err,result)=>{
-        if(!err){
-            res.render('admin-home',{result})
-        }    
+router.get('/admin-login',(req,res)=>{
+    
+    collectionModel.find({}).then((data)=>{
+        res.json(data)
     })
+
     
 })
-router.get('/show-stock-admin',(req,res)=>{
-   
-    console.log('history')
-    orderModel.find({},(err,data)=>{
-        if(!err){
-            res.json(data)
-        }
+
+router.get('/all-orders-admin',(req,res)=>{
+    
+    orderModel.find({}).then((data)=>{
+        res.json(data)
     })
-   //
+
+    
 })
+
+router.get('/all-staffs-admin',(req,res)=>{
+    
+    staff.find({}).then((data)=>{
+        res.json(data)
+    })
+
+    
+})
+
+
 
 module.exports = router
