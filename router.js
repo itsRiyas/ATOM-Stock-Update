@@ -16,6 +16,7 @@ let router  = express.Router()
 
 
 router.get('/',(req,res)=>{
+    //console.log(req)
     console.log('inside root')
    console.log(req.cookies)
    // console.log(req.session)   

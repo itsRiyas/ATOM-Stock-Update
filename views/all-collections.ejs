@@ -2,7 +2,8 @@
 <header>
     <%-include ('partials/nav') %>
 </header>
-<table class="table">
+<button class="btn btn-primary" onclick="saveAsExel()">Save as exel</button>
+<table class="table" id="exelTable">
     <thead>
         <tr>
             <th>Date</th>
@@ -35,4 +36,12 @@
    // window.moment = '<%= moment()%>'
    document.getElementById('shop-name').innerText = '<%= shop_name %>'
     window.userId = '<%= username%>'
+
+    function saveAsExel(type,fn,dl){
+        var elt = document.getElementById('exelTable');
+       var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+      return dl ?
+         XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+         XLSX.writeFile(wb, fn || ('MySheetName.' + (type || 'xlsx')));
+    }
 </script>
